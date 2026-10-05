@@ -74,7 +74,13 @@ The site is the repository root. `.github/workflows/pages.yml` deploys to GitHub
 
 Live URL: **https://windigo98.github.io/Sip-and-Spill/**
 
-If that URL 404s after the workflow succeeds, Pages is not pointed at Actions yet. In the repo: **Settings → Pages → Build and deployment → Source → GitHub Actions**. Save, then re-run the **Deploy GitHub Pages** workflow (or push any commit to `main`).
+Pages is not enabled on this repo yet, so the first **Deploy GitHub Pages** run failed with `Not Found` / “Ensure GitHub Pages has been enabled.” This account cannot turn Pages on. You need to set the source yourself:
+
+1. Open **Settings → Pages → Build and deployment**.
+2. Set **Source** to **GitHub Actions**.
+3. Re-run **Deploy GitHub Pages** from the Actions tab (or push any commit to `main`).
+
+After that, the share URL above should load the game.
 
 Asset links stay relative (`./`) and the service worker scope follows the page directory, so `/Sip-and-Spill/` is the app root. A `<base>` tag is added only when the URL has no trailing slash.
 
