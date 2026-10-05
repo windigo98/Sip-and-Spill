@@ -58,21 +58,17 @@
         <p class="tagline">Truths, sips &amp; beautiful bad decisions</p>
       </header>
 
-      <div class="how-to" id="how-to">
-        <h2 class="how-title">How it works</h2>
-        <ol class="how-steps">
-          <li><strong>Pick genres</strong> — tap one or more to mix them into one shuffled deck, or play All.</li>
-          <li><strong>Optional names</strong> — add 2–12 players so some cards call someone out.</li>
-          <li><strong>Choose a mode</strong> — Pass the phone or Host reads aloud.</li>
-          <li><strong>Follow the card</strong> — hint + drink rule; Trivia answers reveal on tap.</li>
-          <li><strong>Next / Skip</strong> — hand the phone on; cards won’t repeat until the deck cycles.</li>
-        </ol>
-        <p class="how-note">Consent first on dares. Sip water. Never drink and drive.</p>
-      </div>
-
       <div class="home-select">
+        <ol class="setup-flow" aria-label="Setup steps">
+          <li class="setup-step">
+            <div class="step-head">
+              <span class="step-badge" aria-hidden="true">1</span>
+              <div class="step-titles">
+                <h2 id="step-genres">Pick genres</h2>
+                <p class="step-sub">Tap one or more to mix a shuffled deck, or leave All. <span id="filter-count">—</span></p>
+              </div>
+            </div>
         <div class="filter-block">
-          <div class="filter-label">Genres · <span id="filter-count">—</span></div>
           <div class="chips" role="group" aria-label="Prompt genres, select one or more">
             <button type="button" class="chip active" data-filter="all" data-label="All"><span class="chip-label">All</span><span class="chip-n"></span></button>
             <button type="button" class="chip" data-filter="mild" data-label="Mild"><span class="chip-label">Mild</span><span class="chip-n"></span></button>
@@ -91,33 +87,60 @@
           </div>
           <p class="genre-blurb" id="genre-blurb" aria-live="polite"></p>
         </div>
+          </li>
 
+          <li class="setup-step">
+            <div class="step-head">
+              <span class="step-badge" aria-hidden="true">2</span>
+              <div class="step-titles">
+                <h2 id="step-names">Add names <span class="optional">optional</span></h2>
+                <p class="step-sub">2–12 names so some cards call someone out. Skip this if you want.</p>
+              </div>
+            </div>
         <div class="players-block" id="players-block">
-          <div class="filter-label">Players <span class="optional">(optional)</span></div>
           <div class="player-row">
             <input type="text" id="player-input" class="player-input" maxlength="24" placeholder="Add a name…" autocomplete="off" enterkeyhint="done" />
             <button type="button" class="btn btn-secondary btn-add-player" id="btn-add-player">Add</button>
           </div>
           <div class="player-list" id="player-list" aria-live="polite"></div>
           <div class="player-actions">
-            <p class="player-hint" id="player-hint">Optional — add 2–12 names so cards can call someone out.</p>
+            <p class="player-hint" id="player-hint" hidden></p>
             <button type="button" class="btn-text" id="btn-clear-players">Clear</button>
           </div>
         </div>
+          </li>
 
+          <li class="setup-step setup-start">
+            <div class="step-head">
+              <span class="step-badge" aria-hidden="true">3</span>
+              <div class="step-titles">
+                <h2 id="step-play">Choose how to play</h2>
+                <p class="step-sub start-callout" id="start-callout">Tap Pass the phone or Host mode. That starts the game.</p>
+              </div>
+            </div>
         <div class="mode-grid">
-          <button type="button" class="mode-card" id="btn-mode-pass">
+          <button type="button" class="mode-card" id="btn-mode-pass" aria-describedby="start-callout">
+            <span class="mode-start">Starts the game</span>
             <span class="mode-icon" aria-hidden="true">📱</span>
             <strong>Pass the phone</strong>
-            <span>One big card. Answer, sip, pass. Skip if you must.</span>
+            <span class="mode-desc">One big card. Answer, sip, pass. Skip if you must.</span>
           </button>
-          <button type="button" class="mode-card" id="btn-mode-host">
+          <button type="button" class="mode-card" id="btn-mode-host" aria-describedby="start-callout">
+            <span class="mode-start">Starts the game</span>
             <span class="mode-icon" aria-hidden="true">🗣️</span>
             <strong>Host mode</strong>
-            <span>Larger text for reading aloud. Same deck, big energy.</span>
+            <span class="mode-desc">Larger text for reading aloud. Same deck, big energy.</span>
           </button>
         </div>
+          </li>
+        </ol>
       </div>
+
+      <aside class="how-to" id="how-to">
+        <h2 class="how-title">Once you’re playing</h2>
+        <p class="how-brief">Follow the card — hint plus the drink rule. Trivia answers reveal on tap. <strong>Next</strong> hands the phone on; <strong>Skip</strong> if you must. Cards don’t repeat until the deck cycles.</p>
+        <p class="how-note">Consent first on dares. Sip water. Never drink and drive.</p>
+      </aside>
 
       <div class="home-footer">
         <button type="button" class="btn btn-secondary" id="btn-share-home">Share game</button>

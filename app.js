@@ -442,12 +442,19 @@
       });
       list.append(chip);
     });
+    const actions = hint.closest(".player-actions");
     const n = state.players.length;
     if (n === 0) {
-      hint.textContent = "Optional — add 2–12 names so cards can call someone out.";
+      hint.hidden = true;
+      hint.textContent = "";
+      actions.hidden = true;
     } else if (n < MIN_PLAYERS) {
+      actions.hidden = false;
+      hint.hidden = false;
       hint.textContent = `${n} name${n === 1 ? "" : "s"} — add at least ${MIN_PLAYERS} for call-outs (or clear).`;
     } else {
+      actions.hidden = false;
+      hint.hidden = false;
       hint.textContent = `${n} players — cards may address someone at random.`;
     }
     input.disabled = n >= MAX_PLAYERS;
