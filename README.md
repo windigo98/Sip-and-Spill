@@ -142,3 +142,4 @@ Optional fields:
 - `{player}` in `text` — replaced with a random name when 2–12 players are set; otherwise the `Name: ` prefix is stripped.
 
 `category` must be a key in `window.SIP_GENRES`. To add a whole new genre, add it to `SIP_GENRES`, add a chip in `index.html`, add a color in `CAT_COLORS` (`app.js`), and optionally add a scene in `art.js` (it falls back to the party crowd). Then bump the SW cache.
+
