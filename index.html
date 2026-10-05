@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    /* GitHub Pages project sites are served under /Repo-Name/.
+       This repo is /Sip-and-Spill/ (capital S — the path is case-sensitive).
+       Relative ./ assets already resolve when the URL ends with / or index.html.
+       If the path has no trailing slash, point <base> at the project directory. */
+    (function () {
+      var path = location.pathname;
+      if (path.endsWith("/index.html")) path = path.slice(0, -"index.html".length);
+      if (path.endsWith("/")) return;
+      var base = document.createElement("base");
+      base.href = path + "/";
+      document.head.appendChild(base);
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="canonical" href="https://windigo98.github.io/Sip-and-Spill/" />
+  <meta name="theme-color" content="#0c0a12" />
+  <meta name="description" content="Sip & Spill — a shareable party drinking game. Provocative questions, sexy truths & dares, and chaos. 21+ only." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sip & Spill" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <title>Sip & Spill — Party Drinking Game</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Age gate -->
+    <section id="screen-gate" class="screen gate" aria-label="Age verification">
+      <div class="gate-logo" aria-hidden="true">🍸</div>
+      <h1>Sip &amp; Spill</h1>
+      <p>A party game of spicy questions, sexy truths &amp; dares, and chaos.<br />You must be <strong>21 or older</strong> to play.</p>
+      <div class="gate-actions">
+        <button type="button" class="btn btn-primary" id="btn-age-yes">I'm 21+</button>
+        <button type="button" class="btn btn-danger-outline" id="btn-age-no">I'm under 21</button>
+      </div>
+      <p class="gate-legal">Drink responsibly. Never drink and drive. Local laws apply.</p>
+    </section>
+
+    <!-- Blocked -->
+    <section id="screen-blocked" class="screen blocked" aria-label="Access denied">
+      <div class="gate-logo" aria-hidden="true">🚫</div>
+      <h2>Sorry — 21+ only</h2>
+      <p>Come back when you're of legal drinking age.</p>
+    </section>
+
+    <!-- Home -->
+    <section id="screen-home" class="screen" aria-label="Home">
+      <header class="home-header">
+        <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+        <div class="brand">Sip &amp; Spill</div>
+        <p class="tagline">Truths, sips &amp; beautiful bad decisions</p>
+      </header>
+
+      <div class="how-to" id="how-to">
+        <h2 class="how-title">How it works</h2>
+        <ol class="how-steps">
+          <li><strong>Pick a genre</strong> — filters the deck (or play All). Try Trivia, Would You Rather, or Icebreaker.</li>
+          <li><strong>Optional names</strong> — add 2–12 players so some cards call someone out.</li>
+          <li><strong>Choose a mode</strong> — Pass the phone or Host reads aloud.</li>
+          <li><strong>Follow the card</strong> — hint + drink rule; Trivia answers reveal on tap.</li>
+          <li><strong>Next / Skip</strong> — hand the phone on; cards won’t repeat until the deck cycles.</li>
+        </ol>
+        <p class="how-note">Consent first on dares. Sip water. Never drink and drive.</p>
+      </div>
+
+      <div class="home-select">
+        <div class="filter-block">
+          <div class="filter-label">Genre · <span id="filter-count">—</span></div>
+          <div class="chips" role="group" aria-label="Prompt genres">
+            <button type="button" class="chip active" data-filter="all">All</button>
+            <button type="button" class="chip" data-filter="mild">Mild</button>
+            <button type="button" class="chip" data-filter="spicy">Spicy</button>
+            <button type="button" class="chip" data-filter="chaos">Chaos</button>
+            <button type="button" class="chip" data-filter="sexy_truth">Sexy Truth</button>
+            <button type="button" class="chip" data-filter="sexy_dare">Sexy Dare</button>
+            <button type="button" class="chip" data-filter="never_have_i_ever">Never Have I Ever</button>
+            <button type="button" class="chip" data-filter="most_likely">Most Likely To</button>
+            <button type="button" class="chip" data-filter="couples">Couples</button>
+            <button type="button" class="chip" data-filter="friends">Friends</button>
+            <button type="button" class="chip" data-filter="wild_card">Wild Card</button>
+            <button type="button" class="chip" data-filter="trivia">Trivia</button>
+            <button type="button" class="chip" data-filter="would_you_rather">Would You Rather</button>
+            <button type="button" class="chip" data-filter="icebreaker">Icebreaker</button>
+          </div>
+          <p class="genre-blurb" id="genre-blurb" aria-live="polite"></p>
+        </div>
+
+        <div class="players-block" id="players-block">
+          <div class="filter-label">Players <span class="optional">(optional)</span></div>
+          <div class="player-row">
+            <input type="text" id="player-input" class="player-input" maxlength="24" placeholder="Add a name…" autocomplete="off" enterkeyhint="done" />
+            <button type="button" class="btn btn-secondary btn-add-player" id="btn-add-player">Add</button>
+          </div>
+          <div class="player-list" id="player-list" aria-live="polite"></div>
+          <div class="player-actions">
+            <p class="player-hint" id="player-hint">Optional — add 2–12 names so cards can call someone out.</p>
+            <button type="button" class="btn-text" id="btn-clear-players">Clear</button>
+          </div>
+        </div>
+
+        <div class="mode-grid">
+          <button type="button" class="mode-card" id="btn-mode-pass">
+            <span class="mode-icon" aria-hidden="true">📱</span>
+            <strong>Pass the phone</strong>
+            <span>One big card. Answer, sip, pass. Skip if you must.</span>
+          </button>
+          <button type="button" class="mode-card" id="btn-mode-host">
+            <span class="mode-icon" aria-hidden="true">🗣️</span>
+            <strong>Host mode</strong>
+            <span>Larger text for reading aloud. Same deck, big energy.</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-footer">
+        <button type="button" class="btn btn-secondary" id="btn-share-home">Share game</button>
+        <a class="btn tip-btn" id="btn-tip" href="https://cash.app/$windigo98" target="_blank" rel="noopener noreferrer">Tip on Cash App</a>
+      </div>
+      <p class="install-hint" id="install-hint">Add to Home Screen for the full party experience.</p>
+    </section>
+
+    <!-- Play -->
+    <section id="screen-play" class="screen" aria-label="Play">
+      <div class="play-top">
+        <button type="button" class="icon-btn" id="btn-back" aria-label="Back to home">←</button>
+        <div class="play-meta">
+          <div class="play-mode-label" id="play-mode-label">Pass the phone</div>
+          <div class="play-progress" id="play-progress">1 / 1</div>
+        </div>
+        <button type="button" class="icon-btn" id="btn-share" aria-label="Share">↗</button>
+      </div>
+
+      <div class="card-wrap">
+        <aside class="card-art" id="card-art" aria-hidden="true"></aside>
+        <aside class="card-art card-art-right" id="card-art-right" aria-hidden="true"></aside>
+        <article class="prompt-card" id="prompt-card">
+          <div class="card-watermark" id="card-watermark" aria-hidden="true"></div>
+          <span class="cat-badge" id="cat-badge">Mild</span>
+          <p class="prompt-text" id="prompt-text">Loading…</p>
+          <p class="hint-line" id="hint-line"></p>
+          <button type="button" class="answer-block" id="answer-block" hidden aria-live="polite">
+            <span class="answer-label" id="answer-label">Tap to reveal answer</span>
+            <span class="answer-text" id="answer-text"></span>
+          </button>
+          <p class="rule-line" id="rule-line"></p>
+        </article>
+      </div>
+
+      <div class="play-actions">
+        <button type="button" class="btn btn-secondary" id="btn-skip">Skip</button>
+        <button type="button" class="btn btn-primary" id="btn-next">Next →</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./prompts.js"></script>
+  <script src="./art.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

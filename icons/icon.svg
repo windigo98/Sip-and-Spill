@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Sip and Spill">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="55%" stop-color="#ff4d8d"/>
+      <stop offset="100%" stop-color="#fb7185"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#0c0a12"/>
+  <circle cx="256" cy="256" r="200" fill="url(#g)" opacity="0.25"/>
+  <!-- cocktail glass -->
+  <path fill="url(#g)" d="M160 120h192l-72 140v80h48v32H184v-32h48v-80L160 120zm48 32l24 48h48l24-48H208z"/>
+  <!-- sparkle -->
+  <circle cx="380" cy="140" r="14" fill="#fbbf24"/>
+  <circle cx="140" cy="360" r="10" fill="#22d3ee"/>
+</svg>
