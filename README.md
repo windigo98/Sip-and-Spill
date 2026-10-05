@@ -13,7 +13,7 @@ The project path is case-sensitive: `Sip-and-Spill` (capital S). **Share** copie
 ## How to play
 
 1. Open the app and confirm you are **21 or older** (saved in `localStorage`).
-2. Read the **How it works** panel on the home screen, then pick a **genre chip** (or **All**). Each chip shows its prompt count, and a blurb under the chips explains how that genre plays.
+2. Read the **How it works** panel on the home screen, then pick one or more **genre chips** (or **All**). Two or more genres shuffle into one deck. Each chip shows its prompt count, and a blurb under the chips explains the selection. The choice is saved in `localStorage` as `sipspill_filters`.
 3. Optionally add **2–12 player names**. Cards that fit will address a random player (`Alex: …`). With fewer than 2 names, addressing is skipped.
 4. Choose a mode:
    - **Pass the phone**: one big card. Do what the card says or follow its drink rule, then tap **Next** (or **Skip**) and hand the phone on.
@@ -106,7 +106,7 @@ php -S localhost:8080
 
 ## Install as PWA
 
-On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v6`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
+On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v9`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
 
 ## Project layout
 

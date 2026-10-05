@@ -2,7 +2,8 @@
   "use strict";
 
   const AGE_KEY = "sipspill_age_ok";
-  const FILTER_KEY = "sipspill_filter";
+  const FILTER_KEY = "sipspill_filters";
+  const LEGACY_FILTER_KEY = "sipspill_filter";
   const PLAYERS_KEY = "sipspill_players";
   const MAX_PLAYERS = 12;
   const MIN_PLAYERS = 2;
@@ -45,7 +46,7 @@
     return Object.keys(GENRES).filter((id) => id !== "all");
   }
 
-  /** Chip order, so the header and deck label stay stable. */
+  /** Chip order, so the header and saved selection stay stable. */
   function genreIdsInChipOrder() {
     const fromDom = $$(".chip")
       .map((c) => c.dataset.filter)
@@ -62,8 +63,7 @@
     return genreIdsInChipOrder().filter((id) => set.has(id));
   }
 
-  function loadFilters() {
-    const raw = localStorage.getItem(FILTER_KEY);
+  function parseFilterIds(raw) {
     if (!raw || raw === "all") return [];
     let ids = [];
     if (raw.startsWith("[")) {
@@ -85,19 +85,27 @@
     return unique;
   }
 
+  function loadFilters() {
+    const saved = localStorage.getItem(FILTER_KEY);
+    if (saved != null) return parseFilterIds(saved);
+    return parseFilterIds(localStorage.getItem(LEGACY_FILTER_KEY));
+  }
+
   function saveFilters() {
     const ids = orderedSelection();
-    state.filters = ids.length >= genreIdsInChipOrder().length ? [] : ids;
-    if (!state.filters.length) localStorage.setItem(FILTER_KEY, "all");
-    else if (state.filters.length === 1) localStorage.setItem(FILTER_KEY, state.filters[0]);
-    else localStorage.setItem(FILTER_KEY, JSON.stringify(state.filters));
+    const order = genreIdsInChipOrder();
+    state.filters = ids.length >= order.length ? [] : ids;
+    localStorage.setItem(FILTER_KEY, JSON.stringify(state.filters));
+    if (!state.filters.length) localStorage.setItem(LEGACY_FILTER_KEY, "all");
+    else if (state.filters.length === 1) localStorage.setItem(LEGACY_FILTER_KEY, state.filters[0]);
+    else localStorage.removeItem(LEGACY_FILTER_KEY);
   }
 
   function selectionLabels() {
     return orderedSelection().map((id) => CAT_LABELS[id] || id);
   }
 
-  /** Short header: names when they fit a phone, otherwise a count. */
+  /** Names when they fit a phone header; otherwise a count. */
   function selectionHeadline() {
     if (isAll()) return "All";
     const labels = selectionLabels();
@@ -230,13 +238,18 @@
     const card = $("#prompt-card");
     const play = $("#screen-play");
     play.classList.toggle("host-mode", state.mode === "host");
+    const selectionLabel = selectionHeadline();
+    const selectionDetail = selectionFull();
+    const genreEl = $("#play-genre");
+    genreEl.textContent = selectionLabel;
+    genreEl.title = selectionDetail;
+    genreEl.setAttribute(
+      "aria-label",
+      selectionDetail === selectionLabel ? selectionDetail : `${selectionLabel}: ${selectionDetail}`
+    );
     $("#play-mode-label").textContent = state.mode === "host" ? "Host mode" : "Pass the phone";
-    const selectionEl = $("#play-selection");
-    const headline = selectionHeadline();
-    const full = selectionFull();
-    selectionEl.textContent = headline;
-    selectionEl.title = full;
-    selectionEl.setAttribute("aria-label", full === headline ? full : `${headline}: ${full}`);
+    const tintId = isAll() ? "all" : orderedSelection()[0] || "all";
+    play.style.setProperty("--sel-color", CAT_COLORS[tintId] || "#a78bfa");
     $("#btn-skip").hidden = state.mode === "host";
 
     if (!p) {
@@ -244,6 +257,8 @@
       $("#rule-line").textContent = "";
       $("#hint-line").textContent = "";
       $("#cat-badge").textContent = "—";
+      $("#cat-badge").hidden = false;
+      $("#play-card-genre").hidden = true;
       renderAnswerBlock(null);
       return;
     }
@@ -251,7 +266,16 @@
     const color = CAT_COLORS[p.category] || "#a78bfa";
     card.style.setProperty("--cat-color", color);
     play.style.setProperty("--cat-color", color);
-    $("#cat-badge").textContent = CAT_LABELS[p.category] || p.category;
+    const cardLabel = CAT_LABELS[p.category] || p.category;
+    const cardGenre = $("#play-card-genre");
+    const mixedDeck = cardLabel !== selectionLabel;
+    cardGenre.textContent = mixedDeck ? cardLabel : "";
+    cardGenre.hidden = !mixedDeck;
+    const badge = $("#cat-badge");
+    badge.textContent = cardLabel;
+    // Title lives in the header now (selection, plus this card's genre when the
+    // deck is All). Don't repeat it as a small badge on the card.
+    badge.hidden = true;
     const promptDisplay = formatPromptText(p.text);
     $("#prompt-text").textContent = promptDisplay;
 
@@ -387,13 +411,16 @@
       const f = c.dataset.filter;
       c.style.setProperty("--chip-color", CAT_COLORS[f] || "#a78bfa");
       const n = f === "all" ? counts.all : counts[f] || 0;
-      let span = c.querySelector(".chip-n");
-      if (!span) {
-        span = document.createElement("span");
-        span.className = "chip-n";
-        c.append(" ", span);
-      }
-      span.textContent = n;
+      const existing = c.querySelector(".chip-label");
+      const name = (c.dataset.label || (existing ? existing.textContent : "")).trim();
+      const label = document.createElement("span");
+      label.className = "chip-label";
+      label.textContent = name;
+      const span = document.createElement("span");
+      span.className = "chip-n";
+      span.textContent = String(n);
+      c.replaceChildren(label, span);
+      c.setAttribute("aria-label", `${name}, ${n} prompts`);
     });
   }
 
