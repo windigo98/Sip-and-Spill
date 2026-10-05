@@ -151,9 +151,10 @@
     const card = $("#prompt-card");
     const play = $("#screen-play");
     play.classList.toggle("host-mode", state.mode === "host");
-    $("#play-mode-label").textContent =
-      (state.mode === "host" ? "Host mode" : "Pass the phone") +
-      " · " + (CAT_LABELS[state.filter] || "All");
+    const selectionLabel = CAT_LABELS[state.filter] || "All";
+    $("#play-genre").textContent = selectionLabel;
+    $("#play-mode-label").textContent = state.mode === "host" ? "Host mode" : "Pass the phone";
+    play.style.setProperty("--sel-color", CAT_COLORS[state.filter] || "#a78bfa");
     $("#btn-skip").hidden = state.mode === "host";
 
     if (!p) {
@@ -161,6 +162,8 @@
       $("#rule-line").textContent = "";
       $("#hint-line").textContent = "";
       $("#cat-badge").textContent = "—";
+      $("#cat-badge").hidden = false;
+      $("#play-card-genre").hidden = true;
       renderAnswerBlock(null);
       return;
     }
@@ -168,7 +171,16 @@
     const color = CAT_COLORS[p.category] || "#a78bfa";
     card.style.setProperty("--cat-color", color);
     play.style.setProperty("--cat-color", color);
-    $("#cat-badge").textContent = CAT_LABELS[p.category] || p.category;
+    const cardLabel = CAT_LABELS[p.category] || p.category;
+    const cardGenre = $("#play-card-genre");
+    const mixedDeck = cardLabel !== selectionLabel;
+    cardGenre.textContent = mixedDeck ? cardLabel : "";
+    cardGenre.hidden = !mixedDeck;
+    const badge = $("#cat-badge");
+    badge.textContent = cardLabel;
+    // Title lives in the header now (selection, plus this card's genre when the
+    // deck is All). Don't repeat it as a small badge on the card.
+    badge.hidden = true;
     const promptDisplay = formatPromptText(p.text);
     $("#prompt-text").textContent = promptDisplay;
 
@@ -251,13 +263,23 @@
       const f = c.dataset.filter;
       c.style.setProperty("--chip-color", CAT_COLORS[f] || "#a78bfa");
       const n = f === "all" ? counts.all : counts[f] || 0;
+      let label = c.querySelector(".chip-label");
       let span = c.querySelector(".chip-n");
+      if (!label) {
+        const name = c.textContent.replace(/\s+/g, " ").trim();
+        c.textContent = "";
+        label = document.createElement("span");
+        label.className = "chip-label";
+        label.textContent = name;
+        c.append(label);
+        span = null;
+      }
       if (!span) {
         span = document.createElement("span");
         span.className = "chip-n";
-        c.append(" ", span);
+        c.append(span);
       }
-      span.textContent = n;
+      span.textContent = String(n);
     });
   }
 
