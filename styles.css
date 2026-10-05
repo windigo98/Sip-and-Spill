@@ -212,7 +212,8 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   flex: 1.35 1 auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  /* Stay at least as tall as the chips so the players block cannot cover them. */
+  min-height: min-content;
   padding-top: 0;
 }
 .filter-label {
@@ -232,7 +233,8 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   grid-auto-rows: 1fr;
   gap: 0.55rem;
   align-content: stretch;
-  min-height: clamp(14rem, 38vh, 28rem);
+  /* min-content keeps every chip tappable; the clamp still fills tall screens. */
+  min-height: max(clamp(14rem, 38vh, 28rem), min-content);
 }
 
 .chip {
@@ -628,7 +630,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 @media (max-width: 360px) {
   .mode-grid { grid-template-columns: 1fr; min-height: 0; }
-  .chips { min-height: 12rem; }
+  .chips { min-height: max(12rem, min-content); }
 }
 
 /* Wider phones: 3-column genre grid for denser fill */
@@ -638,7 +640,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* Tall viewports: push selection to soak leftover space */
 @media (min-height: 740px) {
-  .chips { min-height: clamp(16rem, 42vh, 32rem); }
+  .chips { min-height: max(clamp(16rem, 42vh, 32rem), min-content); }
   .mode-grid { min-height: clamp(8rem, 24vh, 12rem); }
   .mode-card { min-height: clamp(6.5rem, 20vh, 10.5rem); }
 }
