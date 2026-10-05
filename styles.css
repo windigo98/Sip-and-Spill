@@ -383,6 +383,36 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   flex: 1;
   min-width: 0;
   text-align: center;
+  padding-top: 0.15rem;
+}
+
+.play-brand {
+  font-size: clamp(1.55rem, 7vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  background: linear-gradient(120deg, #fff, var(--accent) 60%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.play-selection {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.play-status {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  margin-top: 0.15rem;
 }
 
 .play-mode-label {
@@ -396,7 +426,6 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .play-progress {
   font-size: 0.8rem;
   color: var(--muted);
-  margin-top: 0.15rem;
 }
 
 .card-wrap {

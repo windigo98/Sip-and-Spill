@@ -61,7 +61,7 @@
       <div class="how-to" id="how-to">
         <h2 class="how-title">How it works</h2>
         <ol class="how-steps">
-          <li><strong>Pick a genre</strong> — filters the deck (or play All). Try Trivia, Would You Rather, or Icebreaker.</li>
+          <li><strong>Pick genres</strong> — tap one or more to mix them into one shuffled deck, or play All.</li>
           <li><strong>Optional names</strong> — add 2–12 players so some cards call someone out.</li>
           <li><strong>Choose a mode</strong> — Pass the phone or Host reads aloud.</li>
           <li><strong>Follow the card</strong> — hint + drink rule; Trivia answers reveal on tap.</li>
@@ -72,22 +72,22 @@
 
       <div class="home-select">
         <div class="filter-block">
-          <div class="filter-label">Genre · <span id="filter-count">—</span></div>
-          <div class="chips" role="group" aria-label="Prompt genres">
-            <button type="button" class="chip active" data-filter="all">All</button>
-            <button type="button" class="chip" data-filter="mild">Mild</button>
-            <button type="button" class="chip" data-filter="spicy">Spicy</button>
-            <button type="button" class="chip" data-filter="chaos">Chaos</button>
-            <button type="button" class="chip" data-filter="sexy_truth">Sexy Truth</button>
-            <button type="button" class="chip" data-filter="sexy_dare">Sexy Dare</button>
-            <button type="button" class="chip" data-filter="never_have_i_ever">Never Have I Ever</button>
-            <button type="button" class="chip" data-filter="most_likely">Most Likely To</button>
-            <button type="button" class="chip" data-filter="couples">Couples</button>
-            <button type="button" class="chip" data-filter="friends">Friends</button>
-            <button type="button" class="chip" data-filter="wild_card">Wild Card</button>
-            <button type="button" class="chip" data-filter="trivia">Trivia</button>
-            <button type="button" class="chip" data-filter="would_you_rather">Would You Rather</button>
-            <button type="button" class="chip" data-filter="icebreaker">Icebreaker</button>
+          <div class="filter-label">Genres · <span id="filter-count">—</span></div>
+          <div class="chips" role="group" aria-label="Prompt genres, select one or more">
+            <button type="button" class="chip active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-filter="mild" aria-pressed="false">Mild</button>
+            <button type="button" class="chip" data-filter="spicy" aria-pressed="false">Spicy</button>
+            <button type="button" class="chip" data-filter="chaos" aria-pressed="false">Chaos</button>
+            <button type="button" class="chip" data-filter="sexy_truth" aria-pressed="false">Sexy Truth</button>
+            <button type="button" class="chip" data-filter="sexy_dare" aria-pressed="false">Sexy Dare</button>
+            <button type="button" class="chip" data-filter="never_have_i_ever" aria-pressed="false">Never Have I Ever</button>
+            <button type="button" class="chip" data-filter="most_likely" aria-pressed="false">Most Likely To</button>
+            <button type="button" class="chip" data-filter="couples" aria-pressed="false">Couples</button>
+            <button type="button" class="chip" data-filter="friends" aria-pressed="false">Friends</button>
+            <button type="button" class="chip" data-filter="wild_card" aria-pressed="false">Wild Card</button>
+            <button type="button" class="chip" data-filter="trivia" aria-pressed="false">Trivia</button>
+            <button type="button" class="chip" data-filter="would_you_rather" aria-pressed="false">Would You Rather</button>
+            <button type="button" class="chip" data-filter="icebreaker" aria-pressed="false">Icebreaker</button>
           </div>
           <p class="genre-blurb" id="genre-blurb" aria-live="polite"></p>
         </div>
@@ -131,8 +131,12 @@
       <div class="play-top">
         <button type="button" class="icon-btn" id="btn-back" aria-label="Back to home">←</button>
         <div class="play-meta">
-          <div class="play-mode-label" id="play-mode-label">Pass the phone</div>
-          <div class="play-progress" id="play-progress">1 / 1</div>
+          <div class="play-brand">Sip &amp; Spill</div>
+          <div class="play-selection" id="play-selection">All</div>
+          <div class="play-status">
+            <div class="play-mode-label" id="play-mode-label">Pass the phone</div>
+            <div class="play-progress" id="play-progress">1 / 1</div>
+          </div>
         </div>
         <button type="button" class="icon-btn" id="btn-share" aria-label="Share">↗</button>
       </div>

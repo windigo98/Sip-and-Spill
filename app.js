@@ -33,13 +33,84 @@
 
   const state = {
     mode: null, // "pass" | "host"
-    filter: GENRES[localStorage.getItem(FILTER_KEY)] ? localStorage.getItem(FILTER_KEY) : "all",
+    filters: loadFilters(), // specific genre ids; empty means All
     deck: [],
     index: 0,
     shownInCycle: 0,
     players: loadPlayers(),
     answerRevealed: false,
   };
+
+  function genreIds() {
+    return Object.keys(GENRES).filter((id) => id !== "all");
+  }
+
+  /** Chip order, so the header and deck label stay stable. */
+  function genreIdsInChipOrder() {
+    const fromDom = $$(".chip")
+      .map((c) => c.dataset.filter)
+      .filter((id) => id && id !== "all" && GENRES[id]);
+    return fromDom.length ? fromDom : genreIds();
+  }
+
+  function isAll() {
+    return state.filters.length === 0;
+  }
+
+  function orderedSelection() {
+    const set = new Set(state.filters);
+    return genreIdsInChipOrder().filter((id) => set.has(id));
+  }
+
+  function loadFilters() {
+    const raw = localStorage.getItem(FILTER_KEY);
+    if (!raw || raw === "all") return [];
+    let ids = [];
+    if (raw.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) ids = parsed.map((id) => String(id));
+      } catch {
+        ids = [];
+      }
+    } else if (GENRES[raw] && raw !== "all") {
+      ids = [raw];
+    }
+    const allowed = new Set(genreIds());
+    const unique = [];
+    ids.forEach((id) => {
+      if (allowed.has(id) && !unique.includes(id)) unique.push(id);
+    });
+    if (!unique.length || unique.length >= allowed.size) return [];
+    return unique;
+  }
+
+  function saveFilters() {
+    const ids = orderedSelection();
+    state.filters = ids.length >= genreIdsInChipOrder().length ? [] : ids;
+    if (!state.filters.length) localStorage.setItem(FILTER_KEY, "all");
+    else if (state.filters.length === 1) localStorage.setItem(FILTER_KEY, state.filters[0]);
+    else localStorage.setItem(FILTER_KEY, JSON.stringify(state.filters));
+  }
+
+  function selectionLabels() {
+    return orderedSelection().map((id) => CAT_LABELS[id] || id);
+  }
+
+  /** Short header: names when they fit a phone, otherwise a count. */
+  function selectionHeadline() {
+    if (isAll()) return "All";
+    const labels = selectionLabels();
+    if (labels.length === 1) return labels[0];
+    const joined = labels.join(" · ");
+    if (labels.length <= 3 && joined.length <= 34) return joined;
+    return `${labels.length} genres`;
+  }
+
+  function selectionFull() {
+    if (isAll()) return "All";
+    return selectionLabels().join(" · ");
+  }
 
   function loadPlayers() {
     try {
@@ -69,8 +140,16 @@
 
   function filteredPrompts() {
     const all = window.SIP_PROMPTS || [];
-    if (state.filter === "all") return all.slice();
-    return all.filter((p) => p.category === state.filter);
+    if (isAll()) return all.slice();
+    const set = new Set(state.filters);
+    const seen = new Set();
+    const out = [];
+    all.forEach((p) => {
+      if (!set.has(p.category) || seen.has(p.id)) return;
+      seen.add(p.id);
+      out.push(p);
+    });
+    return out;
   }
 
   function rebuildDeck() {
@@ -151,13 +230,17 @@
     const card = $("#prompt-card");
     const play = $("#screen-play");
     play.classList.toggle("host-mode", state.mode === "host");
-    $("#play-mode-label").textContent =
-      (state.mode === "host" ? "Host mode" : "Pass the phone") +
-      " · " + (CAT_LABELS[state.filter] || "All");
+    $("#play-mode-label").textContent = state.mode === "host" ? "Host mode" : "Pass the phone";
+    const selectionEl = $("#play-selection");
+    const headline = selectionHeadline();
+    const full = selectionFull();
+    selectionEl.textContent = headline;
+    selectionEl.title = full;
+    selectionEl.setAttribute("aria-label", full === headline ? full : `${headline}: ${full}`);
     $("#btn-skip").hidden = state.mode === "host";
 
     if (!p) {
-      $("#prompt-text").textContent = "No prompts in this genre.";
+      $("#prompt-text").textContent = "No prompts in this mix.";
       $("#rule-line").textContent = "";
       $("#hint-line").textContent = "";
       $("#cat-badge").textContent = "—";
@@ -209,33 +292,86 @@
     rebuildDeck();
     showScreen("screen-play");
     renderCard();
-    const g = GENRES[state.filter];
-    if (g) toast(`${g.label}: ${g.blurb}`, 3800);
+    if (isAll()) {
+      const g = GENRES.all;
+      if (g) toast(`${g.label}: ${g.blurb}`, 3800);
+    } else if (state.filters.length === 1) {
+      const g = GENRES[state.filters[0]];
+      if (g) toast(`${g.label}: ${g.blurb}`, 3800);
+    } else {
+      toast(`${selectionHeadline()} — mixed & shuffled`, 3800);
+    }
   }
 
-  function setFilter(f) {
-    if (!GENRES[f]) f = "all";
-    state.filter = f;
-    localStorage.setItem(FILTER_KEY, f);
-    $$(".chip").forEach((c) => {
-      const on = c.dataset.filter === f;
-      c.classList.toggle("active", on);
-      c.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-    const counts = countByCategory();
-    const n = f === "all" ? counts.all : counts[f] || 0;
-    $("#filter-count").textContent =
-      f === "all" ? `${n} prompts` : `${n} ${CAT_LABELS[f]} prompts`;
+  function toggleGenre(f) {
+    if (!f || f === "all" || !GENRES[f]) {
+      state.filters = [];
+      saveFilters();
+      renderGenreUI();
+      return;
+    }
+    const set = new Set(state.filters);
+    const turningOffLast = set.has(f) && set.size === 1;
+    if (set.has(f)) set.delete(f);
+    else set.add(f);
+    state.filters = genreIdsInChipOrder().filter((id) => set.has(id));
+    const collapsed = state.filters.length >= genreIdsInChipOrder().length;
+    saveFilters();
+    renderGenreUI();
+    if (turningOffLast || collapsed) toast("All genres");
+  }
 
-    const g = GENRES[f];
+  function filterCountText() {
+    const n = filteredPrompts().length;
+    if (isAll()) return `${n} prompts`;
+    if (state.filters.length === 1) {
+      const label = CAT_LABELS[state.filters[0]] || "genre";
+      return `${n} ${label} prompts`;
+    }
+    return `${n} prompts · ${state.filters.length} genres`;
+  }
+
+  function renderBlurb() {
     const blurb = $("#genre-blurb");
     blurb.innerHTML = "";
     const strong = document.createElement("strong");
-    strong.textContent = g.label + ": ";
-    blurb.append(strong, document.createTextNode(g.blurb));
-    const home = $("#screen-home");
-    home.style.setProperty("--cat-color", CAT_COLORS[f] || "#a78bfa");
-    $("#hero-art").innerHTML = art(f);
+    if (isAll()) {
+      const g = GENRES.all || { label: "All", blurb: "Every prompt in the deck." };
+      strong.textContent = g.label + ": ";
+      blurb.append(strong, document.createTextNode(g.blurb));
+      return;
+    }
+    const ids = orderedSelection();
+    if (ids.length === 1) {
+      const g = GENRES[ids[0]];
+      strong.textContent = g.label + ": ";
+      blurb.append(strong, document.createTextNode(g.blurb));
+      return;
+    }
+    strong.textContent = "Mixed: ";
+    const names = ids.map((id) => GENRES[id].label);
+    const list =
+      names.length === 2
+        ? `${names[0]} and ${names[1]}`
+        : `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
+    blurb.append(strong, document.createTextNode(`${list} — one shuffled deck.`));
+  }
+
+  function renderGenreUI() {
+    const selected = new Set(state.filters);
+    const allOn = isAll();
+    $$(".chip").forEach((c) => {
+      const id = c.dataset.filter;
+      const on = id === "all" ? allOn : selected.has(id);
+      c.classList.toggle("active", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    $("#filter-count").textContent = filterCountText();
+    renderBlurb();
+    const artKey = allOn || state.filters.length !== 1 ? "all" : state.filters[0];
+    const tintId = allOn ? "all" : orderedSelection()[0] || "all";
+    $("#screen-home").style.setProperty("--cat-color", CAT_COLORS[tintId] || "#a78bfa");
+    $("#hero-art").innerHTML = art(artKey);
   }
 
   function countByCategory() {
@@ -378,7 +514,7 @@
     $("#btn-mode-host").addEventListener("click", () => startMode("host"));
 
     $$(".chip").forEach((chip) => {
-      chip.addEventListener("click", () => setFilter(chip.dataset.filter));
+      chip.addEventListener("click", () => toggleGenre(chip.dataset.filter));
     });
 
     $("#btn-next").addEventListener("click", () => advance(false));
@@ -439,7 +575,8 @@
     decorateChips();
     bind();
     renderPlayers();
-    setFilter(state.filter);
+    saveFilters();
+    renderGenreUI();
     initAgeGate();
     registerSW();
   });
