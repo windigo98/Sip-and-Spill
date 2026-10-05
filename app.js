@@ -263,23 +263,16 @@
       const f = c.dataset.filter;
       c.style.setProperty("--chip-color", CAT_COLORS[f] || "#a78bfa");
       const n = f === "all" ? counts.all : counts[f] || 0;
-      let label = c.querySelector(".chip-label");
-      let span = c.querySelector(".chip-n");
-      if (!label) {
-        const name = c.textContent.replace(/\s+/g, " ").trim();
-        c.textContent = "";
-        label = document.createElement("span");
-        label.className = "chip-label";
-        label.textContent = name;
-        c.append(label);
-        span = null;
-      }
-      if (!span) {
-        span = document.createElement("span");
-        span.className = "chip-n";
-        c.append(span);
-      }
+      const existing = c.querySelector(".chip-label");
+      const name = (c.dataset.label || (existing ? existing.textContent : "")).trim();
+      const label = document.createElement("span");
+      label.className = "chip-label";
+      label.textContent = name;
+      const span = document.createElement("span");
+      span.className = "chip-n";
       span.textContent = String(n);
+      c.replaceChildren(label, span);
+      c.setAttribute("aria-label", `${name}, ${n} prompts`);
     });
   }
 
