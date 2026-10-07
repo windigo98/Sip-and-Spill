@@ -520,6 +520,15 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 /* Feedback sits on its own row so Share and Tip keep their width. */
 .home-footer .share-btn { flex: 1 1 100%; }
 
+.home-copy {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  opacity: 0.8;
+  flex: 0 0 auto;
+}
+
 .tip-btn {
   text-decoration: none;
   color: #04140a;

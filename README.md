@@ -106,7 +106,7 @@ php -S localhost:8080
 
 ## Install as PWA
 
-On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v12`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
+On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v13`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
 
 ## Project layout
 
@@ -122,11 +122,12 @@ icons/          # SVG + PNG icons
 .nojekyll
 .github/workflows/pages.yml
 README.md
+LICENSE
 ```
 
 ## License
 
-Partyware — use freely with friends. Stay safe.
+All rights reserved. This source is published for viewing only. See [LICENSE](LICENSE).
 
 ## Adding prompts
 
