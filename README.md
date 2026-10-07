@@ -1,4 +1,4 @@
-# Sip & Spill
+# Tipsy Tease & Spilt Tea
 
 A phone-first Progressive Web App drinking game for parties: sexy truth or dare, never have I ever, most likely to, couples and friends rounds, trivia, would-you-rather, icebreakers, and chaos dares. It's shareable, installable, and built for big tap targets.
 
@@ -106,7 +106,7 @@ php -S localhost:8080
 
 ## Install as PWA
 
-On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v13`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
+On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v14`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
 
 ## Project layout
 

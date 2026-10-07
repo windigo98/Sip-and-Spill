@@ -507,8 +507,8 @@
   async function shareGame() {
     const url = shareUrl();
     const data = {
-      title: "Sip & Spill",
-      text: "Party drinking game — truths, trivia, would-you-rather, sexy dares & chaos. 21+ only.",
+      title: "Tipsy Tease & Spilt Tea",
+      text: "Tipsy Tease & Spilt Tea — party drinking game. Truths, trivia, would-you-rather, sexy dares & chaos. 21+ only.",
       url,
     };
     try {
