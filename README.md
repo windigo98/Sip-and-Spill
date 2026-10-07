@@ -8,7 +8,7 @@ A phone-first Progressive Web App drinking game for parties: sexy truth or dare,
 
 The project path is case-sensitive: `Sip-and-Spill` (capital S). **Share** copies or sends that URL when the game is opened on GitHub Pages.
 
-**Tip on Cash App** on the home screen opens [https://cash.app/$windigo98](https://cash.app/$windigo98).
+**Tip on Cash App** on the home screen opens [https://cash.app/$windigo98](https://cash.app/$windigo98). **Feedback** (home footer and beside Share while playing) opens a mail draft to dovewingsbusiness@gmail.com.
 
 ## How to play
 
@@ -106,7 +106,7 @@ php -S localhost:8080
 
 ## Install as PWA
 
-On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v11`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
+On supported mobile browsers: **Add to Home Screen** / **Install app**. The manifest and icons are included, and the service worker (cache `sip-spill-v12`) caches the core assets, including `art.js` and the full deck, so the game works offline. When you change assets, bump `CACHE` in `sw.js`.
 
 ## Project layout
 
