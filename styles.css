@@ -171,6 +171,37 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .tagline { color: var(--muted); margin-top: 0.35rem; font-size: 0.95rem; }
 
+.byline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.byline:hover { color: var(--text); }
+
+.byline:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.byline-logo {
+  display: block;
+  width: 1.15rem;
+  height: auto;
+  aspect-ratio: 532 / 720;
+  border-radius: 0.2rem;
+  flex-shrink: 0;
+}
+
 /* Home sections stack in normal flow and the screen scrolls. Do not flex-shrink
    these blocks — a squeezed grid lets chip counts and mode cards paint over
    the players row and the Share footer. */
@@ -524,6 +555,17 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 /* Feedback sits on its own row so Share and Tip keep their width. */
 .home-footer .share-btn { flex: 1 1 100%; }
 
+.home-footer .btn-more {
+  flex: 1 1 100%;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--accent-2) 16%, var(--bg-elevated));
+  border: 1px solid color-mix(in srgb, var(--accent-2) 55%, transparent);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.home-footer .btn-more:hover { border-color: var(--accent-2); }
+
 .home-copy {
   margin-top: 0.75rem;
   font-size: 0.75rem;
@@ -531,6 +573,21 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   text-align: center;
   opacity: 0.8;
   flex: 0 0 auto;
+}
+
+.home-copy a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-copy a:hover { color: var(--text); }
+
+.home-copy a:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+  border-radius: 0.2rem;
 }
 
 .tip-btn {
