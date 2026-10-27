@@ -2,7 +2,7 @@
    URLs resolve from the registration scope so the GitHub Pages project
    site (https://windigo98.github.io/Sip-and-Spill/, capital S) caches
    /Sip-and-Spill/ assets rather than the user-site root. */
-const CACHE = "sip-spill-v14";
+const CACHE = "sip-spill-v15";
 const SHELL_PATHS = [
   "./",
   "./index.html",
@@ -14,6 +14,8 @@ const SHELL_PATHS = [
   "./icons/icon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
+  "./assets/brand/logo.png",
+  "./assets/brand/logo.webp",
 ];
 
 function shellUrls() {
